@@ -27,7 +27,9 @@ function setup() {
   engine = Engine.create();
   Engine.run(engine);
   world = engine.world;
-  world.gravity.y = 0;
+  world.bodies = [];
+  world.gravity.scale = 0;
+  engine.timing.timeScale = 1.5;
   //Engine.run(engine);
 
   var opts = {
@@ -57,29 +59,17 @@ function setup() {
         //Machine Learning issue
         fixed = issue.number == 20
 
+        // Take the log of the popularity, and cube it.
+        var growth = pow(log(issue.reactions['+1'] - issue.reactions['-1']), 3)
+
         //Make a new Issue Particle with some random displacement
         var p = new Particle(
           window.innerWidth / 2 + random(-i * 10, i * 10),
           window.innerHeight / 2 + random(-i * 10, i * 10),
-          10 + pow(log(issue.reactions['+1'] - issue.reactions['-1']), 3),
+          10 + growth,
           fixed,
           issue
         );
-
-
-        //If fixed, make it a gravitational attractor
-        if(fixed){
-          p.body.plugin = {
-            attractors: [
-              function(bodyA, bodyB) {
-                return {
-                  x: (bodyA.position.x - bodyB.position.x) * 1e-6,
-                  y: (bodyA.position.y - bodyB.position.y) * 1e-6,
-                };
-              }
-            ]
-          }
-        }
 
         //Add to all particles
         particles.push(p);

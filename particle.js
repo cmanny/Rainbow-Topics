@@ -1,11 +1,39 @@
+Body = Matter.Body;
+
+Matter.use(
+  'matter-wrap', // not required, just for demo
+  'matter-attractors' // PLUGIN_NAME
+);
+
 function Particle(x, y, r, fixed, issue) {
-  var options = {
-    friction: 0,
-    restitution: 0.95,
-    isStatic: fixed
+  if(isNaN(r)) {
+    r = 10;
   }
+  var options = {
+    mass: r,
+    frictionAir: 0.02,
+    plugin: {
+      attractors: fixed ? [
+        function(bodyA, bodyB) {
+          return {
+            x: (bodyA.position.x - bodyB.position.x) * 1e-6,
+            y: (bodyA.position.y - bodyB.position.y) * 1e-6,
+          }
+        }
+      ] : [],
+      wrap: {
+        min: { x: 0, y: 0 },
+        max: { x: window.innerWidth, y: window.innerHeight }
+      }
+    }
+  }
+  console.log(x, y, r, fixed, issue);
   this.body = Bodies.circle(x, y, r, options);
   this.r = r;
+  Body.setVelocity(this.body, {
+    x: random(-1, 1),
+    y: random(-1, 1)
+  });
   this.issue = issue;
   console.log(issue)
   World.add(world, this.body);
