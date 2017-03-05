@@ -1,4 +1,4 @@
-function Particle(x, y, r, fixed) {
+function Particle(x, y, r, fixed, issue) {
   var options = {
     friction: 0,
     restitution: 0.95,
@@ -6,6 +6,8 @@ function Particle(x, y, r, fixed) {
   }
   this.body = Bodies.circle(x, y, r, options);
   this.r = r;
+  this.issue = issue;
+  console.log(issue)
   World.add(world, this.body);
 
   this.isOffScreen = function() {
@@ -24,11 +26,10 @@ function Particle(x, y, r, fixed) {
     translate(pos.x, pos.y);
     rotate(angle);
     rectMode(CENTER);
-    strokeWeight(1);
-    stroke(255);
-    fill(127);
-    ellipse(0, 0, this.r * 2);
-    line(0, 0, this.r, 0);
+    strokeWeight(this.issue.comments + 1);
+    stroke(50, 244, 50);
+    fill(127, 50, 190);
+    ellipse(0, 0, this.r * 1.5);
     pop();
   }
 

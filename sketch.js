@@ -25,6 +25,7 @@ var mConstraint;
 function setup() {
   var canvas = createCanvas(window.innerWidth, window.innerHeight);
   engine = Engine.create();
+  Engine.run(engine);
   world = engine.world;
   world.gravity.y = 0;
   //Engine.run(engine);
@@ -61,11 +62,10 @@ function setup() {
           window.innerWidth / 2 + random(-i * 10, i * 10),
           window.innerHeight / 2 + random(-i * 10, i * 10),
           10 + pow(log(issue.reactions['+1'] - issue.reactions['-1']), 3),
-          fixed
+          fixed,
+          issue
         );
 
-        //Give the particle the issue JSON for later
-        p.issue = issue
 
         //If fixed, make it a gravitational attractor
         if(fixed){
@@ -73,8 +73,8 @@ function setup() {
             attractors: [
               function(bodyA, bodyB) {
                 return {
-                  x: (bodyA.position.x - bodyB.position.x) * 5e-7,
-                  y: (bodyA.position.y - bodyB.position.y) * 5e-7,
+                  x: (bodyA.position.x - bodyB.position.x) * 1e-6,
+                  y: (bodyA.position.y - bodyB.position.y) * 1e-6,
                 };
               }
             ]
@@ -99,7 +99,6 @@ function setup() {
 
 function draw() {
   background(255);
-  Engine.update(engine);
 
   for (var i = 0; i < particles.length; i++) {
     particles[i].show();
