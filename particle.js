@@ -9,15 +9,19 @@ function Particle(x, y, r, fixed, issue) {
   if(isNaN(r)) {
     r = 10;
   }
+  if(r > 9) {
+    fixed = true
+  }
   var options = {
     mass: r,
-    frictionAir: 0.02,
+    friction: 0,
+    frictionAir: 1e-6,
     plugin: {
       attractors: fixed ? [
         function(bodyA, bodyB) {
           return {
-            x: (bodyA.position.x - bodyB.position.x) * 1e-6,
-            y: (bodyA.position.y - bodyB.position.y) * 1e-6,
+            x: (bodyA.position.x - bodyB.position.x) * 1e-9 * r,
+            y: (bodyA.position.y - bodyB.position.y) * 1e-9 * r,
           }
         }
       ] : [],
@@ -31,8 +35,8 @@ function Particle(x, y, r, fixed, issue) {
   this.body = Bodies.circle(x, y, r, options);
   this.r = r;
   Body.setVelocity(this.body, {
-    x: random(-1, 1),
-    y: random(-1, 1)
+    x: random(-10, 10),
+    y: random(-10, 10)
   });
   this.issue = issue;
   console.log(issue)
