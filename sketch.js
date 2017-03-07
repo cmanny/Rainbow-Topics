@@ -48,14 +48,43 @@ function setup() {
     cache: 'default'
   };
 
+  url = "https://api.github.com/repos/CodingTrain/Rainbow-Topics/issues?state=open&per_page=100&page="
 
-  fetch("https://api.github.com/repos/CodingTrain/Rainbow-Topics/issues?state=open&per_page=100&direction=asc", opts)
-    .then(function(response){
-      return response.json()
+  const flatten = function(arr){
+    arr.reduce(
+      function(acc, val){
+        return acc.concat(
+          Array.isArray(val) ? flatten(val) : val
+        )
+      },
+      []
+    );
+    return arr
+  }
+
+  requests = []
+  for(var i = 1; i < 5; i++){
+    console.log(url + i)
+    requests.push(fetch(url + i, opts))
+  }
+
+  Promise.all(requests)
+    .then(function(responses){
+      console.log(responses)
+      return Promise.all(responses.map(
+        function(response){
+          return response.json()
+        }
+      ))
     })
-    .then(function(json){
+    .then(function(arrays){
+      var json = []
+      arrays.forEach(function(array){
+        json = json.concat(array)
+      })
       json.forEach(function(issue, i){
-
+        console.log("hi")
+        console.log(issue)
         //Machine Learning issue
         fixed = issue.number == 20
 
