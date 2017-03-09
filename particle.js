@@ -15,7 +15,7 @@ function Particle(x, y, r, fixed, issue) {
   var options = {
     mass: r,
     friction: 0,
-    frictionAir: 1e-6,
+    frictionAir: 1e-3,
     plugin: {
       attractors: fixed ? [
         function(bodyA, bodyB) {
@@ -31,7 +31,6 @@ function Particle(x, y, r, fixed, issue) {
       }
     }
   }
-  console.log(x, y, r, fixed, issue);
   this.body = Bodies.circle(x, y, r, options);
   this.r = r;
   Body.setVelocity(this.body, {
@@ -39,7 +38,6 @@ function Particle(x, y, r, fixed, issue) {
     y: random(-10, 10)
   });
   this.issue = issue;
-  console.log(issue)
   World.add(world, this.body);
 
   this.isOffScreen = function() {
@@ -63,6 +61,18 @@ function Particle(x, y, r, fixed, issue) {
     fill(127, 50, 190);
     ellipse(0, 0, this.r * 1.5);
     pop();
-  }
 
+    if(overCircle(pos.x, pos.y, this.r * 1.5)) {
+      var tips = document.querySelectorAll('.tooltip');
+      tips[0].style.top = mouseY;
+      tips[0].style.left = mouseX;
+      tips[0].innerHTML = this.issue.number + " " + this.issue.title;
+    }
+  }
+}
+
+var overCircle = function(x, y, diameter) {
+  var disX = x - mouseX;
+  var disY = y - mouseY;
+  return (sqrt(sq(disX) + sq(disY)) < diameter / 2)
 }

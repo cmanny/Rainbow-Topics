@@ -64,13 +64,11 @@ function setup() {
 
   requests = []
   for(var i = 1; i < 5; i++){
-    console.log(url + i)
     requests.push(fetch(url + i, opts))
   }
 
   Promise.all(requests)
     .then(function(responses){
-      console.log(responses)
       return Promise.all(responses.map(
         function(response){
           return response.json()
@@ -83,8 +81,6 @@ function setup() {
         json = json.concat(array)
       })
       json.forEach(function(issue, i){
-        console.log("hi")
-        console.log(issue)
         //Machine Learning issue
         fixed = issue.number == 20
 
